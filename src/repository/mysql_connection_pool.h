@@ -6,6 +6,8 @@
 #include <memory>
 #include <condition_variable>
 #include <thread>
+#include <chrono>
+#include <iostream>
 #include "../config/config.h"
 
 class MySQLConnectionPool {
@@ -20,6 +22,30 @@ private:
 public:
     MySQLConnectionPool(const DatabaseConfig& config, size_t max_conn = 10) 
         : dbConfig(config), max_connections(max_conn), current_connections(0) {
+    }
+
+    // 데이터베이스 연결 테스트 및 초기화
+    bool initialize() {
+        std::cout << "Initializing database connection pool..." << std::endl;
+        
+        for (int attempt = 1; attempt <= dbConfig.max_retries; ++attempt) {
+            std::cout << "Connection attempt " << attempt << "/" << dbConfig.max_retries << std::endl;
+            
+            MYSQL* test_conn = createConnection();
+            if (test_conn) {
+                std::cout << "Database connection successful!" << std::endl;
+                mysql_close(test_conn);
+                return true;
+            }
+            
+            if (attempt < dbConfig.max_retries) {
+                std::cout << "Connection failed. Retrying in " << dbConfig.retry_delay << " seconds..." << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(dbConfig.retry_delay));
+            }
+        }
+        
+        std::cerr << "Failed to connect to database after " << dbConfig.max_retries << " attempts" << std::endl;
+        return false;
     }
 
     ~MySQLConnectionPool() {
@@ -71,6 +97,12 @@ private:
             std::cerr << "Error initializing MySQL" << std::endl;
             return nullptr;
         }
+        
+        // 연결 타임아웃 설정
+        unsigned int timeout = dbConfig.connection_timeout;
+        mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, &timeout);
+        mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, &timeout);
+        mysql_options(mysql, MYSQL_OPT_WRITE_TIMEOUT, &timeout);
         
         if (mysql_real_connect(mysql, dbConfig.host.c_str(), dbConfig.username.c_str(), 
                               dbConfig.password.c_str(), dbConfig.database.c_str(), 

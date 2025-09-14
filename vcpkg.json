@@ -1,11 +1,10 @@
 {
-  "name": "crow-ex2",
-  "version": "1.0.0",
-  "description": "A Crow framework project",
-  "dependencies": [
-    "crow",
-    "libmysql",
-    "yaml-cpp"
-  ],
-  "builtin-baseline": "62efe42f53b1886a20cbeb22ee9a27736d20f149"
+  "name" : "crow-ex2",
+  "version" : "1.0.0",
+  "description" : "A Crow framework project",
+  "dependencies" : [ "libmysql", "yaml-cpp", {
+    "name" : "crow",
+    "version>=" : "1.2.1.2"
+  } ],
+  "builtin-baseline" : "62efe42f53b1886a20cbeb22ee9a27736d20f149"
 }

@@ -9,6 +9,9 @@ struct DatabaseConfig {
     std::string username;
     std::string password;
     std::string database;
+    int connection_timeout;  // 연결 타임아웃 (초)
+    int max_retries;        // 최대 재시도 횟수
+    int retry_delay;        // 재시도 간격 (초)
 };
 
 struct ServerConfig {

@@ -4,10 +4,13 @@ database:
   username: "root"
   password: "test"
   database: "crow_ex1"
+  connection_timeout: 10  # 연결 타임아웃 (초)
+  max_retries: 3          # 최대 재시도 횟수
+  retry_delay: 2          # 재시도 간격 (초)
 
 server:
   host: "0.0.0.0"
-  port: 8080
+  port: 8081
   threads: 10
 
 

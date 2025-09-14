@@ -5,6 +5,7 @@ project(crow_ex2)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 # Find required packages
 find_package(Crow REQUIRED)
 find_package(Threads REQUIRED)
@@ -18,7 +19,8 @@ file(GLOB_RECURSE SOURCES
 )
 
 # Add executable
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES}
+        src/main.cpp)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} 
