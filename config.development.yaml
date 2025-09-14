@@ -1,0 +1,15 @@
+# Development Configuration
+
+# Database Configuration
+database:
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  password: "test"
+  database: "crow_ex1"
+
+# Server Configuration
+server:
+  host: "127.0.0.1"
+  port: 3000
+  threads: 4

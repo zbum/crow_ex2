@@ -1,0 +1,15 @@
+# Production Configuration
+
+# Database Configuration
+database:
+  host: "prod-db.example.com"
+  port: 3306
+  username: "prod_user"
+  password: "secure_password"
+  database: "crow_production"
+
+# Server Configuration
+server:
+  host: "0.0.0.0"
+  port: 80
+  threads: 20
