@@ -1,6 +1,5 @@
 #define CROW_MAIN
 #include "crow.h"
-// Updated: 2025-09-14
 #include "router/member_router.h"
 #include "router/product_router.h"
 #include "service/member_service.h"
@@ -13,7 +12,7 @@
 #include <iostream>
 #include <memory>
 
-int main(int argc, char* argv[]) {
+int main(const int argc, char* argv[]) {
     // 설정 파일 경로 (기본값: config.yaml)
     std::string configFile = "config.yaml";
     if (argc > 1) {
@@ -34,10 +33,18 @@ int main(int argc, char* argv[]) {
     std::cout << "Server: " << config.getServerConfig().host << ":" 
               << config.getServerConfig().port << " (threads: " << config.getServerConfig().threads << ")" << std::endl;
     
-    crow::App<AccessLogMiddleware> app;
-    
-    // MySQL 연결 풀 생성
+    // MySQL 연결 풀 생성 및 초기화
     auto connectionPool = std::make_shared<MySQLConnectionPool>(config.getDatabaseConfig(), 10);
+    
+    // 데이터베이스 연결 확인
+    if (!connectionPool->initialize()) {
+        std::cerr << "Failed to initialize database connection. Exiting..." << std::endl;
+        return 1;
+    }
+    
+    std::cout << "Database connection pool initialized successfully!" << std::endl;
+    
+    crow::App<AccessLogMiddleware> app;
     
     // Repository 인스턴스 생성 (연결 풀 전달)
     MySQLMemberRepository memberRepository(connectionPool);

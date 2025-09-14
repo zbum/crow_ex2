@@ -31,6 +31,9 @@ bool Config::loadFromYaml(const YAML::Node& config) {
             if (db["username"]) dbConfig.username = db["username"].as<std::string>();
             if (db["password"]) dbConfig.password = db["password"].as<std::string>();
             if (db["database"]) dbConfig.database = db["database"].as<std::string>();
+            if (db["connection_timeout"]) dbConfig.connection_timeout = db["connection_timeout"].as<int>();
+            if (db["max_retries"]) dbConfig.max_retries = db["max_retries"].as<int>();
+            if (db["retry_delay"]) dbConfig.retry_delay = db["retry_delay"].as<int>();
         }
         
         // Server 설정 로드
@@ -55,6 +58,9 @@ void Config::setDefaults() {
     dbConfig.username = "root";
     dbConfig.password = "test";
     dbConfig.database = "crow_ex1";
+    dbConfig.connection_timeout = 10;  // 10초 타임아웃
+    dbConfig.max_retries = 3;          // 최대 3회 재시도
+    dbConfig.retry_delay = 2;          // 2초 간격으로 재시도
     
     // Server 기본값
     serverConfig.host = "0.0.0.0";

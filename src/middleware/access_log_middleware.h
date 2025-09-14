@@ -21,7 +21,7 @@ struct AccessLogMiddleware
     void after_handle(crow::request& req, crow::response& res, context& ctx)
     {
         // 요청 종료 시간 기록
-        auto end_time = std::chrono::high_resolution_clock::now();
+        const auto end_time = std::chrono::high_resolution_clock::now();
         
         // 응답시간을 마이크로초 단위로 계산
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - ctx.start_time);
